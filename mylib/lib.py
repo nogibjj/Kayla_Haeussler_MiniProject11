@@ -1,17 +1,8 @@
 """ 
 Library Functions Using PySpark
 """
-import os
-import requests
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import when, col
-from pyspark.sql.types import (
-     StructType, 
-     StructField, 
-     IntegerType, 
-     StringType, 
-     DateType
-)
+from pyspark.sql.functions import when, cols
 
 
 def create_spark_session(app_name = "MyApp"):
