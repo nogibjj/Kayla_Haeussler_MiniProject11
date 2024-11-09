@@ -2,7 +2,6 @@
 Library Functions Using PySpark
 """
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import when, cols
 
 
 def create_spark_session(app_name = "MyApp"):
