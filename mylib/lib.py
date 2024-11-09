@@ -28,7 +28,9 @@ def data_transformation(df):
     df_filtered = df.filter(col("some_column").isNotNull())
 
     # Example: Group by and calculate average for another column
-    df_transformed = df_filtered.groupBy("group_column").agg(avg("numeric_column").alias("average_value"))
+    df_transformed = df_filtered.groupBy("group_column").agg(
+        avg("numeric_column").alias("average_value")
+        )
     return df_transformed
 
 def run_spark_sql(df):
