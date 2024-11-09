@@ -1,20 +1,23 @@
+""" 
+Library Functions Using PySpark
 """
-Calculations library
-"""
-
-#var=
-
-def add(a, b):
-    return a + b
-
-
-def subtract(a, b):
-    return a - b
-
-
-def multiply(a, b):
-    return a * b
+import os
+import requests
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import when, col
+from pyspark.sql.types import (
+     StructType, 
+     StructField, 
+     IntegerType, 
+     StringType, 
+     DateType
+)
 
 
-def divide(a, b):
-    return a / b
+def create_spark_session(app_name = "MyApp"):
+    """ initialize spark session """
+    spark = SparkSession.builder \
+        .appname(app_name) \
+        .getOrCreate()
+    return spark
+
