@@ -52,7 +52,10 @@ class TestMain(unittest.TestCase):
         )
 
     def test_run_spark_sql(self):
-        """Test SQL query output to count incumbents and challengers by state and party."""
+        """
+        Test SQL query output to count incumbents and 
+        challengers by state and party.
+        """
         # Run the query and get results
         result_df = lib.run_spark_sql(self.df)
         result_df.show()
@@ -61,26 +64,42 @@ class TestMain(unittest.TestCase):
         self.assertTrue("challenger_count" in result_df.columns)
 
         # Validate counts for each (state, party) pair
-        california_democrat = result_df.filter((result_df.state == "California") & 
-                                            (result_df.party == "Democrat")).collect()[0]
-        california_republican = result_df.filter((result_df.state == "California") & 
-                                                (result_df.party == "Republican")).collect()[0]
-        texas_democrat = result_df.filter((result_df.state == "Texas") & 
-                                        (result_df.party == "Democrat")).collect()[0]
-        texas_republican = result_df.filter((result_df.state == "Texas") & 
-                                            (result_df.party == "Republican")).collect()[0]
+        california_democrat = result_df.filter((result_df.state
+                                                 == "California") & 
+                                            (result_df.party == 
+                                             "Democrat")).collect()[0]
+        california_republican = result_df.filter((result_df.state == 
+                                                  "California") & 
+                                                (result_df.party == 
+                                                 "Republican")).collect()[0]
+        texas_democrat = result_df.filter((result_df.state 
+                                           == "Texas") & 
+                                        (result_df.party 
+                                         == "Democrat")).collect()[0]
+        texas_republican = result_df.filter((result_df.state
+                                              == "Texas") & 
+                                            (result_df.party 
+                                             == "Republican")).collect()[0]
 
         # Check counts for each party in California
-        self.assertEqual(california_democrat["incumbent_count"], 1)   # 1 Democrat incumbent
-        self.assertEqual(california_democrat["challenger_count"], 0)  # 0 Democrat challengers
-        self.assertEqual(california_republican["incumbent_count"], 0) # 0 Republican incumbents
-        self.assertEqual(california_republican["challenger_count"], 1) # 1 Republican challenger
+        self.assertEqual(california_democrat["incumbent_count"], 1)   
+                            # 1 Democrat incumbent
+        self.assertEqual(california_democrat["challenger_count"], 0)  
+                            # 0 Democrat challengers
+        self.assertEqual(california_republican["incumbent_count"], 0) 
+                            # 0 Republican incumbents
+        self.assertEqual(california_republican["challenger_count"], 1) 
+                            # 1 Republican challenger
 
         # Check counts for each party in Texas
-        self.assertEqual(texas_democrat["incumbent_count"], 1)   # 1 Democrat incumbent
-        self.assertEqual(texas_democrat["challenger_count"], 0)  # 0 Democrat challengers
-        self.assertEqual(texas_republican["incumbent_count"], 0) # 0 Republican incumbents
-        self.assertEqual(texas_republican["challenger_count"], 1) # 1 Republican challenger
+        self.assertEqual(texas_democrat["incumbent_count"], 1)   
+                            # 1 Democrat incumbent
+        self.assertEqual(texas_democrat["challenger_count"], 0)  
+                            # 0 Democrat challengers
+        self.assertEqual(texas_republican["incumbent_count"], 0) 
+                            # 0 Republican incumbents
+        self.assertEqual(texas_republican["challenger_count"], 1) 
+                            # 1 Republican challenger
 
 
     def test_save_data(self):
@@ -90,7 +109,8 @@ class TestMain(unittest.TestCase):
             # Check that a directory exists instead of a single file
             self.assertTrue(os.path.isdir(temp_dir))
             # Check if any CSV part files are inside the directory
-            csv_files = [f for f in os.listdir(temp_dir) if f.endswith(".csv") or f.startswith("part")]
+            csv_files = [f for f in os.listdir(temp_dir) 
+                         if f.endswith(".csv") or f.startswith("part")]
             self.assertGreater(len(csv_files), 0)
     
     def test_log_output(self):
