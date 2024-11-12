@@ -4,7 +4,7 @@ Library Functions Using PySpark
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
 
-LOG_FILE = "pysparl_output.md"
+LOG_FILE = "pyspark_output.md"
 
 def log_output(operation, output, query=None):
     """adds to a markdown file"""
