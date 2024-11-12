@@ -64,7 +64,8 @@ class TestMain(unittest.TestCase):
         self.assertTrue("challenger_count" in result_df.columns)
 
         # Check specific counts for validation
-        california_result = result_df.filter(result_df.state == "California").collect()[0]
+        california_result = result_df.filter(
+            result_df.state == "California").collect()[0]
         self.assertEqual(california_result["incumbent_count"], 1)
         self.assertEqual(california_result["challenger_count"], 1)
 
