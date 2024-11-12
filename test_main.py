@@ -1,70 +1,84 @@
-"""
-Test goes here
-
-"""
-
-import pytest
+import unittest
 from pyspark.sql import SparkSession
 from mylib import lib
+import os
 
-# Initialize a Spark session for testing
-@pytest.fixture(scope="module")
-def spark():
-    spark_session = SparkSession.builder \
-        .appName("TestSession") \
-        .master("local[1]") \
-        .getOrCreate()
-    yield spark_session
-    spark_session.stop()
+class TestMain(unittest.TestCase):
 
-def test_create_spark_session(spark):
-    assert spark is not None
-    assert isinstance(spark, SparkSession)
+    @classmethod
+    def setUpClass(cls):
+        """Set up Spark session for all tests."""
+        cls.spark = lib.create_spark_session("Test_House_District")
+        cls.test_data_path = "test_data.csv"
+        cls.output_path = "test_output.csv"
+        cls.log_file = lib.LOG_FILE
+        # Create sample data for testing
+        sample_data = [
+            ("California", "Democrat", True, 0.55, 0.50, 0.60),
+            ("California", "Republican", False, 0.45, 0.40, 0.50),
+            ("Texas", "Democrat", True, 0.60, 0.55, 0.65),
+            ("Texas", "Republican", False, 0.40, 0.35, 0.45)
+        ]
+        cls.columns = ["state", "party", "incumbent", "voteshare", "p10_voteshare", "p90_voteshare"]
+        cls.df = cls.spark.createDataFrame(sample_data, cls.columns)
 
-def test_load_data(spark):
-    # Assuming test data file path
-    test_file_path = "data/house_district_forecast.csv"
-    df = lib.load_data(spark, test_file_path)
-    assert df is not None
-    assert df.count() > 0  # Check that there are rows in the DataFrame
-    assert len(df.columns) > 0  # Check that there are columns in the DataFrame
+        # Clear the log file before each test
+        with open(cls.log_file, "w") as file:
+            file.write("")
 
-def test_data_transformation(spark):
-    # Create a sample DataFrame for testing
-    data = [("A", 10), ("B", 20), ("A", 30), ("B", 40)]
-    df = spark.createDataFrame(data, ["group_column", "numeric_column"])
+    @classmethod
+    def tearDownClass(cls):
+        """Stop Spark session after all tests are done."""
+        lib.end_spark_session(cls.spark)
+        if os.path.exists(cls.test_data_path):
+            os.remove(cls.test_data_path)
+        if os.path.exists(cls.output_path):
+            os.remove(cls.output_path)
+        if os.path.exists(cls.log_file):
+            os.remove(cls.log_file)
 
-    # Run transformation
-    transformed_df = lib.data_transformation(df)
+    def test_load_data(self):
+        """Test loading data into Spark DataFrame."""
+        df = lib.load_data(self.spark, self.test_data_path)
+        self.assertIsNotNone(df)
+        self.assertEqual(df.count(), len(self.df.collect()))
 
-    # Check that the transformation worked as expected
-    assert transformed_df is not None
-    assert "average_value" in transformed_df.columns
-    assert transformed_df.count() == 2  # Check that there are 2 groups (A and B)
+    def test_data_transformation(self):
+        """Test transformation by checking the new column."""
+        transformed_df = lib.data_transformation(self.df)
+        self.assertTrue("confidence_interval_range" in transformed_df.columns)
 
-def test_run_spark_sql(spark):
-    # Create a sample DataFrame for testing
-    data = [("A", 10), ("B", 20), ("A", 30), ("B", 40)]
-    df = spark.createDataFrame(data, ["group_column", "numeric_column"])
+        # Check that confidence_interval_range is calculated correctly
+        transformed_row = transformed_df.collect()[0]
+        self.assertAlmostEqual(
+            transformed_row["confidence_interval_range"],
+            transformed_row["p90_voteshare"] - transformed_row["p10_voteshare"]
+        )
 
-    # Run SQL query
-    result_df = lib.run_spark_sql(df)
+    def test_run_spark_sql(self):
+        """Test SQL query output to count incumbents and challengers."""
+        result_df = lib.run_spark_sql(self.df)
+        result_df.show()
+        
+        self.assertTrue("incumbent_count" in result_df.columns)
+        self.assertTrue("challenger_count" in result_df.columns)
 
-    # Check that the SQL query returned expected results
-    assert result_df is not None
-    assert "total_value" in result_df.columns
-    assert "average_value" in result_df.columns
-    assert result_df.count() == 2  # Check that there are 2 groups (A and B)
+        # Check specific counts for validation
+        california_result = result_df.filter(result_df.state == "California").collect()[0]
+        self.assertEqual(california_result["incumbent_count"], 1)
+        self.assertEqual(california_result["challenger_count"], 1)
 
-def test_save_data(spark, tmp_path):
-    # Create a sample DataFrame for testing
-    data = [("A", 10), ("B", 20)]
-    df = spark.createDataFrame(data, ["group_column", "numeric_column"])
+    def test_save_data(self):
+        """Test saving data to a specified path."""
+        lib.save_data(self.df, self.output_path)
+        self.assertTrue(os.path.exists(self.output_path))
+    
+    def test_log_output(self):
+        """Test that log_output writes expected data to the markdown file."""
+        initial_size = os.path.getsize(self.log_file)
+        lib.log_output("Test Operation", "Test Output")
+        new_size = os.path.getsize(self.log_file)
+        self.assertGreater(new_size, initial_size)
 
-    # Save to a temporary directory
-    output_path = tmp_path / "output.csv"
-    lib.save_data(df, str(output_path))
-
-    # Check that the file was created
-    assert output_path.exists()
-    assert output_path.is_file()
+if __name__ == "__main__":
+    unittest.main()
