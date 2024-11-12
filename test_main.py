@@ -1,5 +1,4 @@
 import unittest
-from pyspark.sql import SparkSession
 from mylib import lib
 import os
 
@@ -19,7 +18,8 @@ class TestMain(unittest.TestCase):
             ("Texas", "Democrat", True, 0.60, 0.55, 0.65),
             ("Texas", "Republican", False, 0.40, 0.35, 0.45)
         ]
-        cls.columns = ["state", "party", "incumbent", "voteshare", "p10_voteshare", "p90_voteshare"]
+        cls.columns = ["state", "party", "incumbent", "voteshare", 
+                       "p10_voteshare", "p90_voteshare"]
         cls.df = cls.spark.createDataFrame(sample_data, cls.columns)
 
         # Clear the log file before each test

@@ -1,9 +1,8 @@
 """
 Library Functions Using PySpark
 """
-import pandas as pd
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, avg
+from pyspark.sql.functions import col
 
 LOG_FILE = "pysparl_output.md"
 
@@ -44,7 +43,8 @@ def data_transformation(df):
     Adds a new column 'confidence_interval_range' that represents the range between 
     p90_voteshare and p10_voteshare for each candidate.
     """
-    df_transformed = df.withColumn("confidence_interval_range", col("p90_voteshare") - col("p10_voteshare"))
+    df_transformed = df.withColumn("confidence_interval_range", 
+                                   col("p90_voteshare") - col("p10_voteshare"))
 
     log_output("transform data", df.limit(10).toPandas().to_markdown())
 
@@ -54,7 +54,8 @@ def data_transformation(df):
 
 def run_spark_sql(df):
     """
-    Executes a Spark SQL query on the DataFrame to count the number of incumbents and challengers 
+    Executes a Spark SQL query on the DataFrame to count 
+    the number of incumbents and challengers 
     by state and party.
     """
     # Create or retrieve the SparkSession
