@@ -8,7 +8,7 @@ from mylib import lib
 if __name__ == "__main__":
     
     # initialize Spark
-    spark = lib.create_spark_session()
+    spark = lib.create_spark_session('House_District')
 
     # load data
     df = lib.load_data(spark, "data/house_district_forecast.csv")
