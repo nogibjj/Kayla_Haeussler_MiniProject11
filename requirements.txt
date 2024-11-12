@@ -1,3 +1,5 @@
+# testing was saying i needed pandas...
+pandas
 #devops
 black==22.3.0
 click==8.1.3 
