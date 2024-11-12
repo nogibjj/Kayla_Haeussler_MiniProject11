@@ -2,6 +2,7 @@
 IDS 706: Mini Project 10  
 PySpark Data Processing  
 Kayla Haeussler 
+
 [![CI](https://github.com/nogibjj/Kayla_Haeussler_MiniProject10/actions/workflows/cicd.yml/badge.svg)](https://github.com/nogibjj/Kayla_Haeussler_MiniProject10/actions/workflows/cicd.yml)   
 
 ## Assignment Requirements
