@@ -1,13 +1,14 @@
-"""
-Import and run functions from library for ETL pipeline
-"""
+# Databricks notebook source
+# MAGIC %md
+# MAGIC Notebook showing the execution of ETL pipeline (extract, transform, load)
+
+# COMMAND ----------
 
 from mylib.lib import *
 
+# COMMAND ----------
 
-if __name__ == "__main__":
-    
-    # initialize Spark
+# initialize Spark
     spark = create_spark_session('House_District')
 
     # extract data
