@@ -28,7 +28,7 @@ def end_spark_session(spark):
     return "stopped spark session"
 
 
-def load_data(spark, file_path):
+def extract_data(spark, file_path):
     """
     Loads a CSV file into a Spark DataFrame.
     """
@@ -38,7 +38,7 @@ def load_data(spark, file_path):
 
     return df
 
-def data_transformation(df):
+def trasform_data(df):
     """
     Adds a new column 'confidence_interval_range' that represents the range between 
     p90_voteshare and p10_voteshare for each candidate.
@@ -80,7 +80,7 @@ def run_spark_sql(df):
     return result_df
 
 
-def save_data(df, output_path):
+def load_data(df, output_path):
     """
     Saves the resulting DataFrame to the specified path.
     """
