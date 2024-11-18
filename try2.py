@@ -18,8 +18,8 @@ def extract_load(
 
     df = pd.read_csv(url)
     print(df.head())
-    pollingplaces_df = spark.createDataFrame(df)
-    pollingplaces_df.write.format("delta").mode("append").saveAsTable("keh119_housedistricts")
+    districts_df = spark.createDataFrame(df)
+    districts_df.write.format("delta").mode("append").saveAsTable("keh119_housedistricts")
     print("Dataframe saved to table")
     return filepath
 
@@ -92,3 +92,4 @@ outputdf = query("""
     FROM ids706_data_engineering.default.keh119_housedistricts
     GROUP BY state, party
     """, "ids706_data_engineering.default.keh119_housedistricts")
+

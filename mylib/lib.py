@@ -3,6 +3,7 @@ Library Functions Using PySpark
 """
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
+import pandas as pd
 
 LOG_FILE = "pyspark_output.md"
 
@@ -16,8 +17,6 @@ def log_output(operation, output, query=None):
         file.write(output)
         file.write("\n\n")
 
-
-
 def create_spark_session(appName):
     """ initialize spark session """
     spark = SparkSession.builder.appName(appName).getOrCreate()
@@ -28,63 +27,64 @@ def end_spark_session(spark):
     return "stopped spark session"
 
 
-def extract_data(spark, file_path):
+def extract_data(spark, url, filepath):
     """
     Loads a CSV file into a Spark DataFrame.
     """
-    df = spark.read.csv(file_path, header=True, inferSchema=True) 
-    print(df.head()) 
-    district_df = spark.createDataFrame(df) 
-    district_df.write.format("delta").mode("append").saveAsTabl("keh119_districtvoting") 
-    log_output("load data", df.limit(10).toPandas().to_markdown()) 
-    return df 
+    df = pd.read_csv(url)
+    print(df.head())
+    pollingplaces_df = spark.createDataFrame(df)
+    pollingplaces_df.write.format("delta").mode("append").saveAsTable("keh119_housedistricts")
+    print("Dataframe saved to table")
+    log_output("load data", df.head(10).to_markdown()) 
+    return filepath
 
-def trasform_data(df):
-    """
-    Adds a new column 'confidence_interval_range' that represents the range between 
-    p90_voteshare and p10_voteshare for each candidate.
-    """
-    df_transformed = df.withColumn("confidence_interval_range", 
-                                   col("p90_voteshare") - col("p10_voteshare"))
-
-    log_output("transform data", df.limit(10).toPandas().to_markdown())
+LOG_FILE = "query_log_mp11.md"
 
 
-    return df_transformed
+def log_query(query, result="none"):
+    """adds to a query markdown file"""
+    with open(LOG_FILE, "a") as file:
+        file.write(f"```sql\n{query}\n```\n\n")
+        file.write(f"```response from databricks\n{result}\n```\n\n")
 
+def query(query: str, delta_table_name: str, table_name: str = None):
+    try:
+        # Check if delta_table_name is provided
+        if not delta_table_name:
+            raise ValueError(f"Delta table name must be provided, provided: {delta_table_name}")
+        
+        # If no table name is provided, extract from delta_table_name
+        table_name = table_name or delta_table_name.split(".")[-1]
+        
+        
+        table_name = f"`{table_name}`"  
 
-def run_spark_sql(df):
-    """
-    Executes a Spark SQL query on the DataFrame to count 
-    the number of incumbents and challengers 
-    by state and party.
-    """
-    # Create or retrieve the SparkSession
-    spark = SparkSession.builder.getOrCreate()
+        # No need to specify path if you're using Unity Catalog and Delta tables are registered
+        # All of our IDS 706 tables are in this Unity Catalog
+        log_query(query, result="Query received, executing next...")
+        print(f"Executing SQL query on table {delta_table_name}")
+        
+        # Execute the query on the table
+        result_df = spark.sql(query)
+        
+        pandas_df = result_df.toPandas()
+        
+        # Convert the Pandas DataFrame to a Markdown table so it can be seen in our query log
+        result_str = pandas_df.to_markdown(index=False)  
+        
+        
+        log_query(query, result=result_str)
 
-    # Register the DataFrame as a SQL temporary view
-    df.createOrReplaceTempView("election_data")
+        return result_df
+    
+    except Exception as e:
+        # Catch and log any errors during the query execution
+        error_message = f"Error occurred: {e}"
+        log_query(query, result=error_message)
+        print(error_message)
+        return None 
+    
 
-    # SQL query to count incumbents and challengers by state and party
-    sql_query = """
-    SELECT state, 
-           party, 
-           SUM(CASE WHEN incumbent = true THEN 1 ELSE 0 END) AS incumbent_count, 
-           SUM(CASE WHEN incumbent = false THEN 1 ELSE 0 END) AS challenger_count
-    FROM election_data
-    GROUP BY state, party
-    """
-    result_df = spark.sql(sql_query)
-
-    log_output("query data", spark.sql(sql_query).toPandas().to_markdown(), sql_query)
-
-    return result_df
-
-
-def load_data(df, output_path):
-    """
-    Saves the resulting DataFrame to the specified path.
-    """
-    df.write.csv(output_path, header=True, mode="overwrite")
 
 

@@ -251,3 +251,221 @@ Query received, executing next...
 | HI      |                        |                 0 |                882 |
 ```
 
+```sql
+
+    SELECT state, 
+           party, 
+           SUM(CASE WHEN incumbent = true THEN 1 ELSE 0 END) AS incumbent_count, 
+           SUM(CASE WHEN incumbent = false THEN 1 ELSE 0 END) AS challenger_count
+    FROM ids706_data_engineering.default.keh119_housedistricts
+    GROUP BY state, party
+    
+```
+
+```response from databricks
+Query received, executing next...
+```
+
+```sql
+
+    SELECT state, 
+           party, 
+           SUM(CASE WHEN incumbent = true THEN 1 ELSE 0 END) AS incumbent_count, 
+           SUM(CASE WHEN incumbent = false THEN 1 ELSE 0 END) AS challenger_count
+    FROM ids706_data_engineering.default.keh119_housedistricts
+    GROUP BY state, party
+    
+```
+
+```response from databricks
+| state   | party                  |   incumbent_count |   challenger_count |
+|:--------|:-----------------------|------------------:|-------------------:|
+| AZ      | D                      |              3528 |               7056 |
+| CA      | R                      |             14112 |              39984 |
+| LA      | LIB                    |                 0 |               1176 |
+| MI      | Working Class          |                 0 |               2352 |
+| WV      | Mountain               |                 0 |               1176 |
+| CA      | D                      |             45864 |              18816 |
+| OR      | LIB                    |                 0 |               1176 |
+| AL      | D                      |              1176 |               7056 |
+| MO      | LIB                    |                 0 |               7056 |
+| TX      | R                      |             23520 |              14112 |
+| LA      |                        |                 0 |               3528 |
+| PA      | R                      |              8232 |              11760 |
+| MI      | US Taxpayers           |                 0 |               3528 |
+| NJ      |                        |                 0 |               9408 |
+| CA      | I                      |                 0 |               2352 |
+| NC      | LIB                    |                 0 |               4704 |
+| DE      | R                      |                 0 |               1176 |
+| AL      | R                      |              7056 |                  0 |
+| CO      | LIB                    |                 0 |                 96 |
+| OH      | LIB                    |                 0 |               4704 |
+| WI      | R                      |              4704 |               3528 |
+| WI      | D                      |              3528 |               5880 |
+| AR      | D                      |                 0 |               4704 |
+| NE      | D                      |                 0 |               3528 |
+| NE      | R                      |              3528 |                  0 |
+| OK      | D                      |                 0 |               5880 |
+| OR      |                        |                 0 |               2400 |
+| OH      | GRE                    |                 0 |               2352 |
+| OK      | I                      |                 0 |               1176 |
+| SC      | AME                    |                 0 |               3528 |
+| TN      | IND                    |                 0 |               5880 |
+| MS      | R                      |              2352 |               1176 |
+| IL      | R                      |              8232 |              12936 |
+| OR      | GRE                    |                 0 |               1128 |
+| IA      | LIB                    |                 0 |               1176 |
+| MN      | Legal Marijuana Now    |                 0 |               1176 |
+| MA      | IND                    |                 0 |               2352 |
+| AR      | LIB                    |                 0 |               4704 |
+| AZ      | G                      |                 0 |               2352 |
+| IN      | R                      |              5880 |               4704 |
+| TX      | IND                    |                 0 |               1176 |
+| IL      | GRE                    |                 0 |               1176 |
+| WY      |                        |                 0 |               1176 |
+| KY      |                        |                 0 |               1176 |
+| FL      | R                      |             14112 |              11760 |
+| NH      |                        |                 0 |               2256 |
+| AK      | R                      |              1176 |                  0 |
+| MI      |                        |                 0 |               7056 |
+| NV      |                        |                 0 |               3528 |
+| KS      | R                      |              3528 |               1176 |
+| MS      | D                      |              1176 |               3528 |
+| ND      | IND                    |                 0 |               1176 |
+| NY      | WOF                    |              1176 |                  0 |
+| WY      | R                      |              1176 |                  0 |
+| ID      |                        |                 0 |               1176 |
+| KY      | D                      |              1176 |               5880 |
+| MS      | REF                    |                 0 |               4704 |
+| NJ      | LIB                    |                 0 |               1176 |
+| ID      | D                      |                 0 |               2352 |
+| CT      |                        |                 0 |               1176 |
+| NJ      | R                      |              3528 |              10584 |
+| VT      | D                      |              1176 |                  0 |
+| WV      | R                      |              2352 |               1176 |
+| NC      |                        |                 0 |               1176 |
+| OR      | D                      |              4704 |               1176 |
+| ME      | R                      |              1176 |               1176 |
+| VT      |                        |                 0 |               1176 |
+| NV      | D                      |              1176 |               3528 |
+| MA      | R                      |                 0 |               5880 |
+| OH      | R                      |             12936 |               5880 |
+| OK      | R                      |              4704 |               1176 |
+| MD      |                        |                 0 |               3528 |
+| MT      | R                      |              1176 |                  0 |
+| SD      | R                      |                 0 |               1176 |
+| AK      | D                      |                 0 |               1176 |
+| MO      |                        |                 0 |               2352 |
+| OR      | IPO                    |                 0 |               1176 |
+| KY      | IND                    |                 0 |               2352 |
+| MO      | R                      |              7056 |               2352 |
+| MI      | R                      |              9408 |               5880 |
+| MD      | R                      |              1176 |               8232 |
+| WA      | D                      |              7056 |               5880 |
+| ME      |                        |                 0 |               1176 |
+| LA      | I                      |                 0 |               2352 |
+| KS      | LIB                    |                 0 |               2352 |
+| MN      | R                      |              3528 |               5880 |
+| UT      | LIB                    |                 0 |               1176 |
+| NC      | CON                    |                 0 |               1176 |
+| PA      | D                      |              5880 |              15288 |
+| WI      | DPD                    |                 0 |               1176 |
+| NM      | LIB                    |                 0 |               2352 |
+| WA      | L                      |                 0 |               1176 |
+| MS      |                        |                 0 |               1176 |
+| MT      | D                      |                 0 |               1176 |
+| HI      | D                      |              1176 |               1176 |
+| MI      | D                      |              3528 |              12936 |
+| NY      | R                      |             10584 |              14112 |
+| VT      | R                      |                 0 |               1176 |
+| WY      | D                      |                 0 |               1176 |
+| ND      | R                      |                 0 |               1176 |
+| NC      | R                      |             10584 |               4704 |
+| RI      | D                      |              2352 |                  0 |
+| TN      |                        |                 0 |               3528 |
+| WA      | R                      |              3528 |               5880 |
+| IA      |                        |                 0 |               3528 |
+| NY      | Reform Party           |                 0 |               1176 |
+| MN      | D                      |              2352 |               7056 |
+| CT      | R                      |                 0 |               5880 |
+| NV      | R                      |              1176 |               3528 |
+| SC      | R                      |              4704 |               3528 |
+| WV      | D                      |                 0 |               3528 |
+| KS      | D                      |                 0 |               4704 |
+| SD      |                        |                 0 |               1176 |
+| TN      | D                      |              2352 |               8232 |
+| UT      | D                      |                 0 |               4704 |
+| NM      | R                      |                 0 |               3528 |
+| SC      | CON                    |                 0 |               1176 |
+| NC      | D                      |              3528 |              10584 |
+| NY      | G                      |                 0 |               1176 |
+| HI      | R                      |                 0 |               2352 |
+| MT      | LIB                    |                 0 |               1176 |
+| VA      | D                      |              4704 |               8232 |
+| SC      | D                      |              1176 |               7056 |
+| AR      | R                      |              4704 |                  0 |
+| NY      |                        |                 0 |               5484 |
+| MD      | LIB                    |                 0 |               5880 |
+| LA      | D                      |              1176 |              12936 |
+| NM      | D                      |              1176 |               2352 |
+| PA      | L                      |                 0 |               2352 |
+| GA      | D                      |              4704 |              10584 |
+| CT      | D                      |              4704 |               1176 |
+| IL      | IND                    |                 0 |               1176 |
+| OR      | R                      |              1176 |               3576 |
+| VA      | LIB                    |                 0 |               2352 |
+| CA      | G                      |                 0 |               3528 |
+| CO      | L                      |                 0 |                 48 |
+| ID      | R                      |              1176 |               1176 |
+| NH      | D                      |              1176 |               1176 |
+| SD      | D                      |                 0 |               1176 |
+| TN      | R                      |              4704 |               5880 |
+| IL      | D                      |             11760 |               9408 |
+| IN      | LIB                    |                 0 |               1176 |
+| ND      | D                      |                 0 |               1176 |
+| MA      | D                      |              8232 |               2352 |
+| TX      |                        |                 0 |               5880 |
+| TX      | D                      |             10584 |              31752 |
+| CO      | D                      |              2352 |               5880 |
+| OH      | D                      |              4704 |              14112 |
+| NY      | Women's Equality Party |                 0 |                 48 |
+| CT      | GRE                    |                 0 |               1176 |
+| GA      | R                      |             11760 |               3528 |
+| MD      | D                      |              7056 |               2352 |
+| NH      | LIB                    |                 0 |                 96 |
+| NY      | D                      |             18816 |              12936 |
+| NH      | R                      |                 0 |               2352 |
+| ME      | D                      |              1176 |               1176 |
+| DE      | D                      |              1176 |                  0 |
+| IA      | D                      |              1176 |               3528 |
+| UT      | R                      |              4704 |                  0 |
+| FL      | NPA                    |                 0 |               2352 |
+| CO      | R                      |              4704 |               3528 |
+| CO      |                        |                 0 |               5784 |
+| FL      |                        |                 0 |               2352 |
+| NY      | REF                    |                 0 |               2352 |
+| FL      | D                      |             12936 |              18816 |
+| MN      | Independence Party     |                 0 |               1176 |
+| VA      | R                      |              5880 |               5880 |
+| AK      |                        |                 0 |               1128 |
+| NJ      | D                      |              8232 |               5880 |
+| ME      | IND                    |                 0 |               1176 |
+| WI      | I                      |                 0 |               2352 |
+| NJ      | CON                    |                 0 |               1176 |
+| AZ      | R                      |              4704 |               4704 |
+| LA      | R                      |              4764 |               1176 |
+| TX      | LIB                    |                 0 |              28224 |
+| IN      | D                      |              2352 |               8232 |
+| VA      | L                      |                 0 |               1176 |
+| OK      |                        |                 0 |               1176 |
+| KY      | R                      |              5880 |               1176 |
+| KY      | LIB                    |                 0 |               1176 |
+| NY      | GRE                    |                 0 |               2748 |
+| SC      | GRE                    |                 0 |               1176 |
+| RI      | R                      |                 0 |               2352 |
+| IA      | R                      |              3528 |               1176 |
+| MO      | D                      |              2352 |               7056 |
+| UT      |                        |                 0 |               2352 |
+| HI      |                        |                 0 |               1176 |
+```
+
