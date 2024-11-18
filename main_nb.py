@@ -14,7 +14,6 @@ from mylib.lib import *
 
 # COMMAND ----------
 
-import pandas as pd
 # initialize Spark
 spark = create_spark_session('House_District')
 
