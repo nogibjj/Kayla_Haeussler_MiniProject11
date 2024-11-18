@@ -3,6 +3,7 @@ Library Functions Using PySpark
 """
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
+import pandas as pd
 
 LOG_FILE = "pyspark_output.md"
 
@@ -32,7 +33,10 @@ def extract_data(spark, file_path):
     """
     Loads a CSV file into a Spark DataFrame.
     """
-    df = spark.read.csv(file_path, header=True, inferSchema=True)
+    df = pd.read_csv(file_path, header=True, inferSchema=True)
+    print(df.head())
+    distict_df = spark.createDataFrame(df)
+    district_df.write.format("delta").mode("append").saveAsTable("keh119_districtvoting")
 
     log_output("load data", df.limit(10).toPandas().to_markdown())
 

@@ -4,24 +4,45 @@
 
 # COMMAND ----------
 
+
 from mylib.lib import *
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC First, extract
+
+# COMMAND ----------
+
+import pandas as pd
 # initialize Spark
-    spark = create_spark_session('House_District')
+spark = create_spark_session('House_District')
 
-    # extract data
-    df = extract_data(spark, "data/house_district_forecast.csv")
+# extract data
+df = extract_data(spark, "data/house_district_forecast.csv")
 
-    # transform data
-    transformed_df = transform_data(df)
+# COMMAND ----------
 
-    # run SQL query
-    sql_result_df = run_spark_sql(df)
+# MAGIC %md
+# MAGIC Then, transform
 
-    # save results
-    load_data(sql_result_df, "output/processed_data.csv")
+# COMMAND ----------
 
-    # stop Spark session
-    spark.stop()
+# transform data
+transformed_df = transform_data(df)
+
+# run SQL query
+sql_result_df = run_spark_sql(df)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC Now, load
+
+# COMMAND ----------
+
+# save results
+load_data(sql_result_df, "ids706_data_engineering.default.keh119_electiondistrict")
+
+# stop Spark session
+spark.stop()
